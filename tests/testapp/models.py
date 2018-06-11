@@ -6,6 +6,7 @@ Created on May 7, 2011
 """
 from decimal import Decimal
 
+from django import VERSION
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -22,6 +23,10 @@ class ModelWithVanillaMoneyField(models.Model):
     money = MoneyField(max_digits=10, decimal_places=2)
     second_money = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     integer = models.IntegerField(default=0)
+
+
+class ModelWithNullableCurrency(models.Model):
+    money = MoneyField(max_digits=10, decimal_places=2, null=True, default_currency=None)
 
 
 class ModelWithDefaultAsInt(models.Model):
@@ -182,3 +187,13 @@ class PositiveValidatedMoneyModel(models.Model):
             MinMoneyValidator(0),
         ]
     )
+
+
+class ModelWithCustomDefaultManager(models.Model):
+    field = MoneyField(max_digits=10, decimal_places=2)
+
+    custom = models.Manager()
+
+    if VERSION[:2] != (1, 8):
+        class Meta:
+            default_manager_name = 'custom'

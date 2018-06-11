@@ -30,6 +30,7 @@ from .testapp.models import (
     ModelIssue300,
     ModelRelatedToModelWithMoney,
     ModelWithChoicesMoneyField,
+    ModelWithCustomDefaultManager,
     ModelWithCustomManager,
     ModelWithDefaultAsDecimal,
     ModelWithDefaultAsFloat,
@@ -39,6 +40,7 @@ from .testapp.models import (
     ModelWithDefaultAsString,
     ModelWithDefaultAsStringWithCurrency,
     ModelWithNonMoneyField,
+    ModelWithNullableCurrency,
     ModelWithSharedCurrency,
     ModelWithTwoMoneyFields,
     ModelWithUniqueIdAndCurrency,
@@ -327,6 +329,25 @@ class TestGetOrCreate:
         assert instance.second == Money(15, 'USD')
 
 
+class TestNullableCurrency:
+
+    def test_create_nullable(self):
+        instance = ModelWithNullableCurrency.objects.create()
+        assert instance.money is None
+        assert instance.money_currency is None
+
+    def test_create_default(self):
+        money = Money(100, 'SEK')
+        instance = ModelWithNullableCurrency.objects.create(money=money)
+        assert instance.money == money
+
+    def test_fails_with_null_currency(self):
+        with pytest.raises(ValueError) as exc:
+            ModelWithNullableCurrency.objects.create(money=10)
+        assert str(exc.value) == 'Missing currency value'
+        assert not ModelWithNullableCurrency.objects.exists()
+
+
 class TestFExpressions:
 
     parametrize_f_objects = pytest.mark.parametrize(
@@ -605,12 +626,18 @@ def test_migration_serialization():
     assert MigrationWriter.serialize(Money(100, 'GBP')) == (serialized, {'import djmoney.money'})
 
 
-def test_clear_meta_cache():
+@pytest.mark.parametrize('model, manager_name', (
+    (ModelWithVanillaMoneyField, 'objects'),
+    (ModelWithCustomDefaultManager, 'custom'),
+))
+def test_clear_meta_cache(model, manager_name):
     """
     See issue GH-318.
     """
-    ModelWithVanillaMoneyField._meta._expire_cache()
-    manager_class = ModelWithVanillaMoneyField.objects.__class__
+    if model is ModelWithCustomDefaultManager and VERSION[:2] == (1, 8):
+        pytest.skip('The `default_manager_name` setting is not available in Django 1.8')
+    model._meta._expire_cache()
+    manager_class = getattr(model, manager_name).__class__
     assert manager_class.__module__ + '.' + manager_class.__name__ == 'djmoney.models.managers.MoneyManager'
 
 

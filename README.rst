@@ -27,7 +27,7 @@ This version adds tests, and comes with several critical bugfixes.
 
 Django versions supported: 1.8, 1.11, 2.0
 
-Python versions supported: 2.7, 3.3, 3.4, 3.5, 3.6
+Python versions supported: 2.7, 3.4, 3.5, 3.6
 
 PyPy versions supported: PyPy 2.6, PyPy3 2.4
 
@@ -293,7 +293,7 @@ Install the required packages:
 
     cd ./django-money/
 
-    pip install -e .[tests] # installation with required packages for testing
+    pip install -e .[test] # installation with required packages for testing
 
 Recommended way to run the tests:
 
@@ -383,6 +383,8 @@ To convert one currency to another:
     >>> from djmoney.contrib.exchange.models import convert_money
     >>> convert_money(Money(100, 'EUR'), 'USD')
     <Money: 122.8184375038380800 USD>
+
+Exchange rates are integrated with Django Admin.
 
 django-money can be configured to automatically use this app for currency
 conversions by settings ``AUTO_CONVERT_MONEY = True`` in your Django

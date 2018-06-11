@@ -1,9 +1,11 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.utils.module_loading import import_string
 
-from djmoney.settings import EXCHANGE_BACKEND
+from djmoney._compat import text_type
+from djmoney.settings import EXCHANGE_BACKEND, RATES_CACHE_TIMEOUT
 
 from .exceptions import MissingRate
 
@@ -12,6 +14,9 @@ class ExchangeBackend(models.Model):
     name = models.CharField(max_length=255, primary_key=True)
     last_update = models.DateTimeField(auto_now=True)
     base_currency = models.CharField(max_length=3)
+
+    def __str__(self):
+        return self.name
 
     def clear_rates(self):
         self.rates.all().delete()
@@ -47,7 +52,17 @@ def get_rate(source, target, backend=None):
     """
     if backend is None:
         backend = get_default_backend_name()
-    if source == target:
+    key = 'djmoney:get_rate:%s:%s:%s' % (source, target, backend)
+    result = cache.get(key)
+    if result is not None:
+        return result
+    result = _get_rate(source, target, backend)
+    cache.set(key, result, RATES_CACHE_TIMEOUT)
+    return result
+
+
+def _get_rate(source, target, backend):
+    if text_type(source) == text_type(target):
         return 1
     try:
         forward = models.Q(currency=target, backend__base_currency=source)
