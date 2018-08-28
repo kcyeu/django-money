@@ -3,6 +3,37 @@
 Changelog
 =========
 
+`0.14.3`_ - 2018-08-14
+----------------------
+
+Fixed
+~~~~~
+
+- ``djmoney.forms.widgets.MoneyWidget`` decompression on Django 2.1+. `#443`_ (`Stranger6667`_)
+
+`0.14.2`_ - 2018-07-23
+----------------------
+
+Fixed
+~~~~~
+
+- Validation of ``djmoney.forms.fields.MoneyField`` when ``disabled=True`` is passed to it. `#439`_ (`stinovlas`_, `Stranger6667`_)
+
+`0.14.1`_ - 2018-07-17
+----------------------
+
+Added
+~~~~~
+
+- Support for indirect rates conversion through maximum 1 extra step (when there is no direct conversion rate:
+  converting by means of a third currency for which both source and target currency have conversion
+  rates). `#425`_ (`Stranger6667`_, `77cc33`_)
+
+Fixed
+~~~~~
+
+- Error was raised when trying to do a query with a `ModelWithNullableCurrency`. `#427`_ (`Woile`_)
+
 `0.14`_ - 2018-06-09
 --------------------
 
@@ -511,13 +542,17 @@ Added
 
 - Initial public release
 
-.. _Unreleased: https://github.com/django-money/django-money/compare/0.13.5...HEAD
-.. _0.13.5: https://github.com/django-money/django-money/compare/0.13.4..0.13.5
-.. _0.13.4: https://github.com/django-money/django-money/compare/0.13.3..0.13.4
-.. _0.13.3: https://github.com/django-money/django-money/compare/0.13.2..0.13.3
-.. _0.13.2: https://github.com/django-money/django-money/compare/0.13.1..0.13.2
-.. _0.13.1: https://github.com/django-money/django-money/compare/0.13..0.13.1
-.. _0.13: https://github.com/django-money/django-money/compare/0.12.3..0.13
+.. _Unreleased: https://github.com/django-money/django-money/compare/0.14.3...HEAD
+.. _0.14.3: https://github.com/django-money/django-money/compare/0.14.3...0.14.2
+.. _0.14.2: https://github.com/django-money/django-money/compare/0.14.2...0.14.1
+.. _0.14.1: https://github.com/django-money/django-money/compare/0.14.1...0.14
+.. _0.14: https://github.com/django-money/django-money/compare/0.14...0.13.5
+.. _0.13.5: https://github.com/django-money/django-money/compare/0.13.4...0.13.5
+.. _0.13.4: https://github.com/django-money/django-money/compare/0.13.3...0.13.4
+.. _0.13.3: https://github.com/django-money/django-money/compare/0.13.2...0.13.3
+.. _0.13.2: https://github.com/django-money/django-money/compare/0.13.1...0.13.2
+.. _0.13.1: https://github.com/django-money/django-money/compare/0.13...0.13.1
+.. _0.13: https://github.com/django-money/django-money/compare/0.12.3...0.13
 .. _0.12.3: https://github.com/django-money/django-money/compare/0.12.2...0.12.3
 .. _0.12.2: https://github.com/django-money/django-money/compare/0.12.1...0.12.2
 .. _0.12.1: https://github.com/django-money/django-money/compare/0.12...0.12.1
@@ -554,6 +589,10 @@ Added
 .. _0.3: https://github.com/django-money/django-money/compare/0.2...0.3
 .. _0.2: https://github.com/django-money/django-money/compare/0.2...a6d90348085332a393abb40b86b5dd9505489b04
 
+.. _#443: https://github.com/django-money/django-money/issues/443
+.. _#439: https://github.com/django-money/django-money/issues/439
+.. _#427: https://github.com/django-money/django-money/pull/427
+.. _#425: https://github.com/django-money/django-money/issues/425
 .. _#412: https://github.com/django-money/django-money/issues/412
 .. _#410: https://github.com/django-money/django-money/issues/410
 .. _#402: https://github.com/django-money/django-money/issues/402
@@ -680,10 +719,12 @@ Added
 .. _sjdines: https://github.com/sjdines
 .. _snbuchholz: https://github.com/snbuchholz
 .. _spookylukey: https://github.com/spookylukey
+.. _stinovlas: https://github.com/stinovlas
 .. _synotna: https://github.com/synotna
 .. _toudi: https://github.com/toudi
 .. _tsouvarev: https://github.com/tsouvarev
 .. _yellow-sky: https://github.com/yellow-sky
+.. _Woile: https://github.com/Woile
 .. _w00kie: https://github.com/w00kie
 .. _willhcr: https://github.com/willhcr
 .. _1337: https://github.com/1337

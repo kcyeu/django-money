@@ -25,9 +25,9 @@ http://code.google.com/p/python-money/
 
 This version adds tests, and comes with several critical bugfixes.
 
-Django versions supported: 1.8, 1.11, 2.0
+Django versions supported: 1.8, 1.11, 2.0, 2.1
 
-Python versions supported: 2.7, 3.4, 3.5, 3.6
+Python versions supported: 2.7, 3.4, 3.5, 3.6, 3.7
 
 PyPy versions supported: PyPy 2.6, PyPy3 2.4
 
@@ -73,7 +73,9 @@ Use as normal model fields:
 
 
         class BankAccount(models.Model):
-            balance = MoneyField(max_digits=10, decimal_places=2, default_currency='USD')
+            balance = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+            
+To comply with certain strict accounting or financial regulations, you may consider using ``max_digits=19`` and ``decimal_places=4``, see more in this `StackOverflow answer <https://stackoverflow.com/a/224866/405682>`__
 
 Searching for models with money fields:
 
@@ -330,9 +332,9 @@ To choose another data source set ``EXCHANGE_BACKEND`` settings with importable 
 If you want to implement your own backend, you need to extend ``djmoney.contrib.exchange.backends.base.BaseExchangeBackend``.
 Two data sources mentioned above are not open, so you have to specify access keys in order to use them:
 
-``OPEN_EXCHANGE_RATES_APP_ID`` - https://openexchangerates.org/
+``OPEN_EXCHANGE_RATES_APP_ID`` - '<your actual key from openexchangerates.org>'
 
-``FIXER_ACCESS_KEY`` - https://fixer.io/
+``FIXER_ACCESS_KEY`` - '<your actual key from fixer.io>'
 
 Backends return rates for a base currency, by default it is USD, but could be changed via ``BASE_CURRENCY`` setting.
 Open Exchanger Rates & Fixer supports some extra stuff, like historical data or restricting currencies
